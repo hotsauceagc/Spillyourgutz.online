@@ -496,7 +496,30 @@
 </head>
 <body>
   <div class="scanline"></div>
+<!-- NAVIGATION PILLS -->
+<div class="subnav">
 
+  <div class="pill active" onclick="activatePill(this)">
+    Shameless Chat
+  </div>
+
+  <div class="pill" onclick="window.location.href='thatssofunny.html'">
+    Gut Busters 😂
+  </div>
+
+  <div class="pill" onclick="activatePill(this)">
+    Sauce Vault
+  </div>
+
+  <div class="pill" onclick="activatePill(this)">
+    Rice & Beans Route
+  </div>
+
+  <div class="pill" onclick="activatePill(this)">
+    Lore Broadcast
+  </div>
+
+</div>
   <div class="container neon-frame">
     <!-- Butterflies -->
     <div class="butterfly cyan large top-left"></div>
@@ -555,7 +578,12 @@ Bring the heat — not harm.</div>
           <div>What this is</div>
           <span>Quick rules</span>
         </div>
-
+function activatePill(selected) {
+  document.querySelectorAll(".subnav .pill").forEach(p => {
+    p.classList.remove("active");
+  });
+  selected.classList.add("active");
+}
         <p><strong>Spill Your Gutz</strong> is your spicy, anonymous-feeling corner of the internet — for confessions, questions, venting, and laughs.</p>
         <p>No hate. No harassment. No doxxing. No threats. If it’s cruel, it’s not “spicy,” it’s just trash.</p>
         <p>If you’re overwhelmed: drink water, eat something small, close your eyes for 10 minutes. Even the baddest rebels recharge. 🦋</p>
@@ -572,7 +600,12 @@ Bring the heat — not harm.</div>
       EST. 2026 · Spill Your Gutz · Shameless Confessions · Powered by your chaos and good taste
     </footer>
   </div>
-
+function activatePill(selected) {
+  document.querySelectorAll(".subnav .pill").forEach(p => {
+    p.classList.remove("active");
+  });
+  selected.classList.add("active");
+}
   <script>
     const form = document.getElementById("chatForm");
     const input = document.getElementById("chatInput");
@@ -715,7 +748,16 @@ Bring the heat — not harm.</div>
       }
     });
 
-    input.addEventListener("keydown", (e) => {
+    input<script>
+  // your existing chat code here
+
+  function activatePill(selected) {
+    document.querySelectorAll(".subnav .pill").forEach(p => {
+      p.classList.remove("active");
+    });
+    selected.classList.add("active");
+  }
+</script>.addEventListener("keydown", (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         form.dispatchEvent(new Event("submit"));
