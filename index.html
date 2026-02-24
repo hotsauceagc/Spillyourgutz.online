@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spill Your Gutz · Shameless Confessions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #05030a;
+      --bg-soft: #0b0715;
+      --neon-pink: #ff3bff;
+      --neon-cyan: #00f5ff;
+      --neon-orange: #ff6a2a;
+      --neon-yellow: #ffe45e;
+      --neon-purple: #b026ff;
+      --neon-green: #00ff41;
+      --neon-red: #ff0033;
+      --text-main: #f5f7ff;
+      --text-soft: #b3b7e6;
+      --border-radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 59, 255, 0.16), transparent 55%),
+        radial-gradient(circle at bottom, rgba(0, 245, 255, 0.18), transparent 55%),
+        #020006;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 40px 20px;
+      font-size: 18px;
+      overflow-x: hidden;
+    }
+
+    .scanline {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.2;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1400px;
+      background: radial-gradient(circle at top left, #140a2a, #050309 55%);
+      border-radius: 24px;
+      padding: 32px 32px 36px;
+      box-shadow:
+        0 0 60px rgba(0, 0, 0, 0.9),
+        0 0 48px rgba(0, 245, 255, 0.2);
+      border: 1px solid rgba(0, 245, 255, 0.18);
+      overflow: hidden;
+    }
+
+    .neon-frame {
+      position: relative;
+      padding: 28px;
+      border-radius: 20px;
+      background: radial-gradient(circle at top, #13061c, #040109 60%);
+      box-shadow:
+        0 0 28px rgba(255, 59, 255, 0.45),
+        0 0 42px rgba(0, 245, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .neon-frame::before,
+    .neon-frame::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, var(--neon-orange), var(--neon-cyan)) border-box;
+      -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+    .neon-frame::after { filter: blur(10px); opacity: 0.45; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 14px;
+    }
+
+    .logo-block h1 {
+      font-size: 2.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff6afb, #00f5ff, #ffe45e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 18px rgba(255, 106, 251, 0.7),
+        0 0 32px rgba(0, 245, 255, 0.7);
+      line-height: 1.05;
+    }
+
+    .logo-block span {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .tag-pill {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 245, 255, 0.55);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .subnav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+      font-size: 1rem;
+    }
+
+    .pill {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-soft);
+      background: radial-gradient(circle at top, #27104a, #05030a);
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.8);
+      transition: all 0.18s ease-out;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .pill.active {
+      border-color: var(--neon-pink);
+      color: var(--neon-yellow);
+      box-shadow:
+        0 0 24px rgba(255, 59, 255, 0.8),
+        0 0 32px rgba(0, 245, 255, 0.5);
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--neon-cyan);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1.15fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 1024px) {
+      main { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      .tag-pill { align-self: flex-start; }
+    }
+
+    .chat-panel, .side-panel {
+      background: radial-gradient(circle at top, #12091f, #05030a 60%);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 28px rgba(0, 0, 0, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--neon-cyan);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title span {
+      font-size: 0.88rem;
+      color: var(--text-soft);
+      letter-spacing: 0.08em;
+      text-transform: none;
+      opacity: 0.95;
+    }
+
+    .chat-log {
+      height: 440px;
+      background: radial-gradient(circle at top, #0d041a, #020008 65%);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 18px;
+      overflow-y: auto;
+      font-size: 1.02rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-log::-webkit-scrollbar { width: 8px; }
+    .chat-log::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--neon-pink), var(--neon-cyan));
+      border-radius: 10px;
+    }
+
+    .chat-message { line-height: 1.45; max-width: 88%; }
+    .chat-message.user { align-self: flex-end; }
+    .chat-message.ai { align-self: flex-start; }
+
+    .chat-message .meta {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chat-message.user .meta { justify-content: flex-end; }
+
+    .chat-message .bubble {
+      padding: 14px 18px;
+      font-size: 1.02rem;
+      line-height: 1.55;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .chat-message.user .bubble {
+      background: linear-gradient(135deg, #ff6af2, #ffa94d);
+      border-radius: 18px 18px 4px 18px;
+      color: #1a061f;
+      box-shadow:
+        0 0 20px rgba(255, 106, 242, 0.8),
+        0 0 32px rgba(255, 169, 77, 0.7);
+    }
+
+    .chat-message.ai .bubble {
+      background: radial-gradient(circle at top, #0f162c, #040914);
+      border-radius: 18px 18px 18px 4px;
+      border: 1px solid rgba(0, 245, 255, 0.5);
+      color: var(--text-main);
+      box-shadow: 0 0 22px rgba(0, 245, 255, 0.65);
+    }
+
+    .input-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(3, 1, 9, 0.9);
+      color: var(--text-main);
+      padding: 16px 18px;
+      font-size: 1.02rem;
+      outline: none;
+      min-height: 84px;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 22px rgba(0, 245, 255, 0.55);
+    }
+
+    button.send-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 16px 22px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, var(--neon-orange), var(--neon-pink));
+      color: #15030e;
+      box-shadow:
+        0 0 24px rgba(255, 106, 42, 0.85),
+        0 0 36px rgba(255, 59, 255, 0.75);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      min-width: 140px;
+      user-select: none;
+    }
+
+    button.send-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 28px rgba(255, 159, 94, 0.9),
+        0 0 38px rgba(255, 90, 255, 0.9);
+    }
+
+    footer {
+      margin-top: 22px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: var(--text-soft);
+      opacity: 0.85;
+    }
+
+    /* Butterflies */
+    .butterfly {
+      position: absolute;
+      width: 48px;
+      height: 40px;
+      pointer-events: none;
+      z-index: 10;
+      filter: drop-shadow(0 0 15px currentColor);
+      opacity: 0.9;
+    }
+    .butterfly::before {
+      content: "🦋";
+      font-size: 42px;
+      position: absolute;
+      animation: flutterWings 2.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+    .butterfly.cyan { color: var(--neon-cyan); }
+    .butterfly.pink { color: var(--neon-pink); }
+    .butterfly.yellow { color: var(--neon-yellow); }
+    .butterfly.orange { color: var(--neon-orange); }
+    .butterfly.purple { color: var(--neon-purple); }
+    .butterfly.green { color: var(--neon-green); }
+    .butterfly.red { color: var(--neon-red); }
+
+    .butterfly.top-left { top: 26px; left: 26px; }
+    .butterfly.top-right { top: 38px; right: 38px; }
+    .butterfly.mid-left { top: 34%; left: 18px; }
+    .butterfly.mid-right { top: 46%; right: 18px; }
+    .butterfly.bottom-left { bottom: 86px; left: 56px; }
+    .butterfly.bottom-right { bottom: 96px; right: 44px; }
+    .butterfly.center-left { top: 62%; left: 8%; }
+    .butterfly.center-right { top: 24%; right: 14%; }
+
+    @keyframes flutterWings {
+      0%, 100% { transform: scaleX(1) rotate(-5deg); }
+      50% { transform: scaleX(0.7) rotate(5deg); }
+    }
+
+    /* Sound toggle */
+    .sound-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      z-index: 20;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="scanline"></div>
+
+  <div class="container neon-frame">
+    <!-- Butterflies -->
+    <div class="butterfly cyan top-left"></div>
+    <div class="butterfly pink top-right"></div>
+    <div class="butterfly yellow mid-left"></div>
+    <div class="butterfly orange mid-right"></div>
+    <div class="butterfly purple bottom-left"></div>
+    <div class="butterfly green bottom-right"></div>
+    <div class="butterfly red center-left"></div>
+    <div class="butterfly cyan center-right"></div>
+
+    <button class="sound-toggle" id="soundToggle" title="Toggle sound">🔊</button>
+
+    <header>
+      <div class="logo-block">
+        <h1>SPILL YOUR GUTZ · LIVE</h1>
+        <span>Shameless Confessions · Neon No-Judgment Zone</span>
+      </div>
+      <div class="tag-pill">KEEP IT SPICY · NOT CRUEL</div>
+    </header>
+
+    <!-- ONE NAV BAR (WITH GUT BUSTERS) -->
+    <div class="subnav" id="topNav">
+      <div class="pill active" onclick="activatePill(this)">Shameless Chat</div>
+      <div class="pill" onclick="window.location.href='thatssofunny.html'">Gut Busters 😂</div>
+      <div class="pill" onclick="activatePill(this)">Sauce Vault</div>
+      <div class="pill" onclick="activatePill(this)">Rice & Beans Route</div>
+      <div class="pill" onclick="activatePill(this)">Lore Broadcast</div>
+    </div>
+
+    <main>
+      <section class="chat-panel">
+        <div class="panel-title">
+          <div>Room · Spill Your Gutz</div>
+          <span>Anonymous vibes · Respect required · Laughs allowed</span>
+        </div>
+
+        <div class="chat-log" id="chatLog">
+          <div class="chat-message ai">
+            <div class="meta">🦋 Gutz Guide · now</div>
+            <div class="bubble">Welcome to Spill Your Gutz. 🦋🌶️
+Say the thing you can’t say out loud.
+No sermons. No fake perfection. Just truth, jokes, and release.
+Bring the heat — not harm.</div>
+          </div>
+        </div>
+
+        <form class="input-row" id="chatForm">
+          <textarea id="chatInput" placeholder="Type your confession… or your most chaotic thought. (Shift+Enter for a new line)"></textarea>
+          <button class="send-btn" id="sendBtn" type="submit">Send</button>
+        </form>
+      </section>
+
+      <aside class="side-panel">
+        <div class="panel-title">
+          <div>What this is</div>
+          <span>Quick rules</span>
+        </div>
+
+        <p><strong>Spill Your Gutz</strong> is your spicy corner of the internet — for confessions, questions, venting, and laughs.</p>
+        <p>No hate. No harassment. No doxxing. No threats. If it’s cruel, it’s not “spicy,” it’s just trash.</p>
+        <p>If you’re overwhelmed: drink water, eat something small, close your eyes for 10 minutes. Even the baddest rebels recharge. 🦋</p>
+      </aside>
+    </main>
+
+    <footer>
+      EST. 2026 · Spill Your Gutz · Shameless Confessions · Powered by your chaos and good taste
+    </footer>
+  </div>
+
+  <script>
+    function activatePill(selected) {
+      document.querySelectorAll("#topNav .pill").forEach(p => p.classList.remove("active"));
+      selected.classList.add("active");
+    }
+
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("chatInput");
+    const log = document.getElementById("chatLog");
+    const sendBtn = document.getElementById("sendBtn");
+    const soundToggle = document.getElementById("soundToggle");
+
+    let soundEnabled = true;
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    document.addEventListener("click", () => {
+      if (audioContext.state === "suspended") audioContext.resume();
+    }, { once: true });
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      const now = audioContext.currentTime;
+      gainNode.gain.setValueAtTime(0.08, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+      if (type === "send") {
+        oscillator.frequency.setValueAtTime(820, now);
+        oscillator.frequency.exponentialRampToValueAtTime(420, now + 0.12);
+        oscillator.start(now);
+        oscillator.stop(now + 0.14);
+      } else {
+        oscillator.frequency.setValueAtTime(420, now);
+        oscillator.frequency.exponentialRampToValueAtTime(620, now + 0.14);
+        oscillator.start(now);
+        oscillator.stop(now + 0.16);
+      }
+    }
+
+    soundToggle.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.textContent = soundEnabled ? "🔊" : "🔇";
+    });
+
+    function addMessage(text, type = "user", labelOverride = null) {
+      if (!text || !String(text).trim()) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "chat-message " + type;
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const label = labelOverride || (type === "user" ? "You" : "🦋 Gutz Guide");
+      meta.textContent = label + " · " + time;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      wrapper.appendChild(meta);
+      wrapper.appendChild(bubble);
+      log.appendChild(wrapper);
+      log.scrollTop = log.scrollHeight;
+
+      playSound(type === "user" ? "send" : "receive");
+    }
+
+    function fakeAIReply(userText) {
+      const lower = userText.toLowerCase();
+      let reply = "Logged. 🦋🌶️ Keep talking — the truth always lands somewhere.";
+
+      if (lower.includes("tired") || lower.includes("burnout")) {
+        reply = "Running on fumes is real. Drink water, eat something small, and give yourself 10 minutes eyes-closed. Even rebels recharge. 🦋";
+      } else if (lower.includes("love") || lower.includes("crush")) {
+        reply = "Love is the original spicy sauce: messy, addictive, and impossible to hide. Tell it how it happened. 😏";
+      } else if (lower.includes("church")) {
+        reply = "Whew. That’s the kind of story that belongs in the parking lot after service. 😇😏";
+      } else if (lower.includes("hot sauce") || lower.includes("spicy")) {
+        reply = "Say less. What’s the heat level: mild regret, medium mess, or scorched-earth truth? 🔥";
+      }
+
+      addMessage(reply, "ai");
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+
+      setTimeout(() => fakeAIReply(text), 650);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        form.dispatchEvent(new Event("submit"));
+      }
+    });
+  </script>
+</body>
+</html>
