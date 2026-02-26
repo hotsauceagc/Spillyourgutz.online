@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gut Busters · 8 Shocking Confessions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #05030a;
+      --bg-soft: #0b0715;
+      --neon-pink: #ff3bff;
+      --neon-cyan: #00f5ff;
+      --neon-orange: #ff6a2a;
+      --neon-yellow: #ffe45e;
+      --neon-purple: #b026ff;
+      --neon-green: #00ff41;
+      --neon-red: #ff0033;
+      --text-main: #f5f7ff;
+      --text-soft: #b3b7e6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 59, 255, 0.16), transparent 55%),
+        radial-gradient(circle at bottom, rgba(0, 245, 255, 0.18), transparent 55%),
+        #020006;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    .scanline {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.2;
+      z-index: 1;
+    }
+
+    /* Butterflies Animation */
+    .butterfly {
+      position: absolute;
+      width: 48px;
+      height: 40px;
+      pointer-events: none;
+      z-index: 0;
+      filter: drop-shadow(0 0 15px currentColor);
+      opacity: 0.8;
+    }
+    .butterfly::before {
+      content: "🦋";
+      font-size: 42px;
+      position: absolute;
+      animation: flutterWings 2.5s ease-in-out infinite;
+    }
+    .butterfly.cyan { color: var(--neon-cyan); }
+    .butterfly.pink { color: var(--neon-pink); }
+    
+    .butterfly.top-left { top: 50px; left: 50px; animation: float1 10s ease-in-out infinite; }
+    .butterfly.mid-right { top: 40%; right: 20px; animation: float2 12s ease-in-out infinite; }
+
+    @keyframes flutterWings {
+      0%, 100% { transform: scaleX(1) rotate(-5deg); }
+      50% { transform: scaleX(0.7) rotate(5deg); }
+    }
+    @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, -30px); } }
+    @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, -20px); } }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff6afb, #00f5ff, #ffe45e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 30px rgba(255, 59, 255, 0.4);
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    .subtitle {
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 1rem;
+    }
+
+    /* THE GRID */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+      z-index: 2;
+    }
+
+    .card {
+      background: rgba(20, 10, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 20px 40px rgba(0, 245, 255, 0.2);
+    }
+
+    .card-number {
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      background: var(--neon-cyan);
+      color: #000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px var(--neon-cyan);
+    }
+
+    .confession-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .tags {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .hashtag {
+      color: var(--neon-yellow);
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    .reaction {
+      color: var(--text-soft);
+    }
+
+    /* Color accents for cards */
+    .card:nth-child(1) .card-number { background: var(--neon-pink); box-shadow: 0 0 15px var(--neon-pink); }
+    .card:nth-child(2) .card-number { background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green); }
+    .card:nth-child(3) .card-number { background: var(--neon-orange); box-shadow: 0 0 15px var(--neon-orange); }
+    .card:nth-child(4) .card-number { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+    
+    .back-btn {
+        margin-top: 50px;
+        padding: 15px 40px;
+        border-radius: 50px;
+        background: transparent;
+        border: 2px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: bold;
+        transition: 0.2s;
+        z-index: 2;
+    }
+    .back-btn:hover {
+        background: var(--neon-cyan);
+        color: #000;
+        box-shadow: 0 0 30px var(--neon-cyan);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="scanline"></div>
+  
+  <div class="butterfly cyan top-left"></div>
+  <div class="butterfly pink mid-right"></div>
+
+  <header>
+    <h1>GUT BUSTERS</h1>
+    <div class="subtitle">8 Confessions We Can't Un-Read</div>
+  </header>
+
+  <div class="grid-container">
+
+    <div class="card">
+      <div class="card-number">1</div>
+      <div class="confession-text">"I’ve been bringing 'homemade' mac and cheese to the family potluck for 5 years. It’s KFC. I switch the containers in the car. Grandma said it was her favorite."</div>
+      <div class="tags">
+        <span class="hashtag">#FakeChef</span>
+        <span class="reaction">🔥 402</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">2</div>
+      <div class="confession-text">"I told my boss I had a 'personal emergency' so I could leave early. The emergency was that my lace front was lifting."</div>
+      <div class="tags">
+        <span class="hashtag">#Priorities</span>
+        <span class="reaction">💀 890</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">3</div>
+      <div class="confession-text">"I’m currently dating twins. They don’t know. I just think it’s funny that neither of them realizes I’m using the same gift card for both dates."</div>
+      <div class="tags">
+        <span class="hashtag">#DoubleTrouble</span>
+        <span class="reaction">😈 1.2k</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">4</div>
+      <div class="confession-text">"I still use my ex’s HBO login to watch House of the Dragon. He broke up with me in 2019. I created a profile called 'Mom' so he wouldn't delete it."</div>
+      <div class="tags">
+        <span class="hashtag">#StreamingThief</span>
+        <span class="reaction">📺 550</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">5</div>
+      <div class="confession-text">"I mute my best friend on Instagram because her happiness annoys me, but I comment 'Queen! 🔥' on every picture within 30 seconds."</div>
+      <div class="tags">
+        <span class="hashtag">#HaterEnergy</span>
+        <span class="reaction">🐍 300</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">6</div>
+      <div class="confession-text">"I didn't lose weight. I just learned how to use the warp tool in Photoshop. If you see me in person, mind your business."</div>
+      <div class="tags">
+        <span class="hashtag">#DigitalDiet</span>
+        <span class="reaction">📸 800</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">7</div>
+      <div class="confession-text">"I checked my man's phone while he was sleeping. He’s not cheating, but he Googled 'how to break up nicely.' I cooked him a steak immediately."</div>
+      <div class="tags">
+        <span class="hashtag">#TacticalSteak</span>
+        <span class="reaction">🍖 2.1k</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-number">8</div>
+      <div class="confession-text">"I stole the office coffee maker when I got fired. It’s in my kitchen right now. I don’t even drink coffee."</div>
+      <div class="tags">
+        <span class="hashtag">#SeverancePackage</span>
+        <span class="reaction">☕ 105</span>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="index.html" class="back-btn">Back to Chat</a>
+
+</body>
+</html>
